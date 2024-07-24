@@ -71,6 +71,8 @@
     </style>
 </head>
 <body>
+<% response.setHeader("Cache-Control", "no-cache , no-store, must-revalidate"); 
+	response.setHeader("Expires","0"); %>
     <div class="container">
         <h1><i class="fas fa-user-slash"></i> Account Details</h1>
         <table>
@@ -144,5 +146,11 @@
             <p><i class="fas fa-info-circle"></i> Once closed, your account cannot be re-opened.</p>
         </div>
     </div>
+    <script>
+        history.pushState(null, null, document.URL);
+        window.addEventListener('popstate', function () {
+            history.pushState(null, null, document.URL);
+        });
+    </script>
 </body>
 </html>

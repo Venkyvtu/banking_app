@@ -11,30 +11,21 @@
         button:hover { background-color: #0056b3; }
         .message { margin-top: 20px; color: #ff0000; font-size: 16px; }
     </style>
-    <script>
-        function confirmLogout() {
-            if (confirm("Are you sure you want to log out?")) {
-                var xhr = new XMLHttpRequest();
-                xhr.open("GET", "Logoutservlet", true);
-                xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
-                xhr.onreadystatechange = function () {
-                    if (xhr.readyState === 4 && xhr.status === 200) {
-                        var jsonResponse = JSON.parse(xhr.responseText);
-                        if (jsonResponse.status === "success") {
-                            document.getElementById("message").innerText = "You have successfully logged out.";
-                        }
-                    }
-                };
-                xhr.send();
-            }
-        }
-    </script>
+    
 </head>
 <body>
+<% response.setHeader("Cache-Control", "no-cache , no-store, must-revalidate"); 
+	response.setHeader("Expires","0"); %>
     <div class="logout-container">
         <h2>Logout</h2>
         <button onclick="confirmLogout()">Logout</button>
         <div id="message" class="message"></div>
     </div>
+    <script>
+        history.pushState(null, null, document.URL);
+        window.addEventListener('popstate', function () {
+            history.pushState(null, null, document.URL);
+        });
+    </script>
 </body>
 </html>

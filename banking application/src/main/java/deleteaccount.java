@@ -26,7 +26,7 @@ public class deleteaccount extends HttpServlet {
             ResultSet rs = pst.executeQuery();
 
             out.println("<html><head><style>");
-            out.println("body { font-family: Arial, sans-serif; background-color: #f9f9f9; margin: 40px; text-align: center; padding: 20px; }");
+            out.println("body { font-family: Arial, sans-serif; margin: 40px; text-align: center; padding: 20px; }");
             out.println("form { max-width: 400px; margin: 20px auto; background-color: #fff; padding: 20px; border-radius: 8px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); }");
             out.println("label, input { display: block; margin: 10px auto; }");
             out.println("button { padding: 12px 20px; background-color: #007bff; color: white; border: none; border-radius: 4px; font-size: 16px; cursor: pointer; transition: background-color 0.3s ease; }");

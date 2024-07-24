@@ -7,6 +7,8 @@
 <title>Insert title here</title>
 </head>
 <body>
+<% response.setHeader("Cache-Control", "no-cache , no-store, must-revalidate"); 
+	response.setHeader("Expires","0"); %>
 <h1>failure</h1>
 </body>
 </html>

@@ -34,18 +34,12 @@ public class RegisterCustomerServlet extends HttpServlet {
         String accountType = request.getParameter("accountType");
         double initialBalance = Double.parseDouble(request.getParameter("initialBalance"));
         LocalDate dob = LocalDate.parse(request.getParameter("dob"));
+        String gender=request.getParameter("gender");
+        String idProofType = request.getParameter("idProofType");
+        String idProofNumber = idProofType.equals("PAN") ? request.getParameter("panNumber") : request.getParameter("aadharNumber");
+       
         
-        Part filePart = request.getPart("idProof");
-        String fileName = Paths.get(filePart.getSubmittedFileName()).getFileName().toString();
-        String uploadDir = getServletContext().getRealPath("") + File.separator + "uploads";
-        File uploadDirFile = new File(uploadDir);
-        if (!uploadDirFile.exists()) {
-            uploadDirFile.mkdir();
-        }
-        String filePath = uploadDir + File.separator + fileName;
-        filePart.write(filePath);
-        
-        Customer customer = new Customer(fullName, address, mobileNo, email, accountType, initialBalance, dob, filePath);
+        Customer customer = new Customer(fullName, address, mobileNo, email, accountType, initialBalance, dob,gender, idProofType,idProofNumber);
 
         try {
             customerDAO.registerCustomer(customer);
@@ -53,6 +47,6 @@ public class RegisterCustomerServlet extends HttpServlet {
             e.printStackTrace();
         }
 
-        response.sendRedirect("welcome.jsp");
+        response.sendRedirect("customeCheck.jsp");
     }
 }

@@ -5,12 +5,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>View Transactions</title>
+    <title>View Customer Details</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
     <style>
         body {
             font-family: Arial, sans-serif;
-           
             margin: 0;
             padding: 20px;
         }
@@ -75,16 +74,18 @@
 <% response.setHeader("Cache-Control", "no-cache , no-store, must-revalidate"); 
 	response.setHeader("Expires","0"); %>
     <div class="container">
-        <button class="download-btn" onclick="window.location.href='DownloadTransactionServlet'">Download Transactions</button>
-        <h1><i class="fas fa-history"></i> View Transactions</h1>
+        
+        <h1><i class="fas fa-user"></i> View Customer Details</h1>
         <table>
             <thead>
                 <tr>
-                    <th>Transaction ID</th>
-                    <th>Transaction Date</th>
-                    <th>Transaction Type</th>
-                    <th>Amount</th>
-                    <th>Balance</th>
+                    <th>Account Number</th>
+                    <th>Full Name</th>
+                    <th>Address</th>
+                    <th>Mobile No</th>
+                    <th>Email</th>
+                    <th>Date of Birth</th>
+                    <th>Gender</th>
                 </tr>
             </thead>
             <tbody>
@@ -92,18 +93,20 @@
                     String accountNumber = (String) session.getAttribute("accountNumber");
                     try {
                         Class.forName("com.mysql.jdbc.Driver");
-                        Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/banking_apps", "root", "root");
-                        PreparedStatement ps = con.prepareStatement("SELECT * FROM transactions WHERE account_no = ? ORDER BY transaction_date DESC LIMIT 10");
-                        ps.setString(1, accountNumber);
+                        Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/customer_details", "root", "root");
+                        PreparedStatement ps = con.prepareStatement("SELECT * FROM customers");
+                        
                         ResultSet rs = ps.executeQuery();
                         while (rs.next()) {
                 %>
                 <tr>
-                    <td><%= rs.getString("transaction_id") %></td>
-                    <td><%= rs.getTimestamp("transaction_date") %></td>
-                    <td><%= rs.getString("transaction_type") %></td>
-                    <td><%= rs.getFloat("amount") %></td>
-                    <td><%= rs.getFloat("balance") %></td>
+                    <td><%= rs.getString("account_no") %></td>
+                    <td><%= rs.getString("full_name") %></td>
+                    <td><%= rs.getString("address") %></td>
+                    <td><%= rs.getString("mobile_no") %></td>
+                    <td><%= rs.getString("email") %></td>
+                    <td><%= rs.getDate("dob") %></td>
+                    <td><%= rs.getString("gender") %></td>
                 </tr>
                 <%
                         }

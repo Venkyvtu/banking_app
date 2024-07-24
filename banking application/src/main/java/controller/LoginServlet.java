@@ -41,6 +41,10 @@ public class LoginServlet extends HttpServlet {
             session.setAttribute("fullName", result.getFullName());
             session.setAttribute("accountNumber", result.getAccountNumber());
             session.setAttribute("balance", result.getBalance());
+            session.setAttribute("mobile_no", result.getMobileNo());
+            session.setAttribute("dob", result.getDob());
+            session.setAttribute("email", result.getEmail());
+            session.setAttribute("address", result.getAddress());
 
             if (result.getRole().equalsIgnoreCase("admin")) {
                 response.sendRedirect("welcome.jsp");

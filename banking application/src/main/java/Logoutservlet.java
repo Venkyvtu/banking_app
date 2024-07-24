@@ -16,8 +16,20 @@ public class Logoutservlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        HttpSession session = request.getSession();
+    	response.setHeader("Cache-Control", "no-cache, no-store, must-revalidate");
+        response.setHeader("Pragma", "no-cache");
+        response.setDateHeader("Expires", 0);
+        HttpSession session = request.getSession(false);
+        System.out.print(session);
+        if (session != null || session.getAttribute("username") == null) {
         session.invalidate();
+        }
         response.sendRedirect("login.jsp");
+    }
+
+    
+
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        doGet(request, response);
     }
 }

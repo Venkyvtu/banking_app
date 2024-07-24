@@ -9,10 +9,13 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
     <style>
         body {
-            font-family: Arial, sans-serif;
-            background-color: #f0f0f0;
+             font-family: Arial, sans-serif;
             margin: 0;
-            padding: 20px;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
         }
         .container {
             background-color: #fff;
@@ -69,7 +72,9 @@
     </style>
 </head>
 <body>
-    <div class="container">
+<% response.setHeader("Cache-Control", "no-cache , no-store, must-revalidate"); 
+	response.setHeader("Expires","0"); %>
+	    <div class="container">
         <h1><i class="fas fa-hand-holding-usd"></i> Withdraw</h1>
         <form action="WithdrawServlet" method="post">
             <label for="amount">Enter withdraw amount:</label>

@@ -10,9 +10,11 @@ public class Customer {
     private String accountType;
     private double initialBalance;
     private LocalDate dob;
-    private String idProof;
+    private String idProofNumber;
+    private String idProofType;
+    private String gender;
     public Customer(String fullName, String address, String mobileNo, String email, String accountType,
-                    double initialBalance, LocalDate dob, String idProof) {
+                    double initialBalance, LocalDate dob, String gender,String idProofType,String idProofNumber) {
         this.fullName = fullName;
         this.address = address;
         this.mobileNo = mobileNo;
@@ -20,7 +22,9 @@ public class Customer {
         this.accountType = accountType;
         this.initialBalance = initialBalance;
         this.dob = dob;
-        this.idProof = idProof;
+        this.gender=gender;
+        this.idProofType = idProofType;
+        this.idProofNumber = idProofNumber;
     }
     
 
@@ -45,8 +49,24 @@ public class Customer {
 
     public LocalDate getDob() { return dob; }
     public void setDob(LocalDate dob) { this.dob = dob; }
+    
+    public String getGender() { return gender; }
+    public void setGender(String gender) { this.gender = gender; }
 
-    public String getIdProof() { return idProof; }
-    public void setIdProof(String idProof) { this.idProof = idProof; }
+    public String getIdProofType() {
+        return idProofType;
+    }
+
+    public void setIdProofType(String idProofType) {
+        this.idProofType = idProofType;
+    }
+
+    public String getIdProofNumber() {
+        return idProofNumber;
+    }
+
+    public void setIdProofNumber(String idProofNumber) {
+        this.idProofNumber = idProofNumber;
+    }
 
 }

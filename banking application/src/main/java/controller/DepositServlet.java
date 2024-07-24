@@ -2,18 +2,15 @@ package controller;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+
+import dao.CustomerDAO;
+import java.sql.SQLException;
 
 @WebServlet("/DepositServlet")
 public class DepositServlet extends HttpServlet {
@@ -36,91 +33,45 @@ public class DepositServlet extends HttpServlet {
         HttpSession session = request.getSession();
         String username = (String) session.getAttribute("username");
 
-        // Database connection parameters
-        String jdbcUrl = "jdbc:mysql://localhost:3306/customer_details";
-        String dbUsername = "root";
-        String dbPassword = "root";
-
-        Connection connection = null;
-        PreparedStatement stmt = null;
-        ResultSet rs = null;
+        CustomerDAO customerDAO = new CustomerDAO();
 
         try {
-            // Load MySQL JDBC Driver
-            Class.forName("com.mysql.jdbc.Driver");
+            // Retrieve current balance
+            double currentBalance = customerDAO.getCurrentBalance(username);
 
-            // Establish connection to MySQL
-            connection = DriverManager.getConnection(jdbcUrl, dbUsername, dbPassword);
-
-            // Retrieve current balance from the database
-            String retrieveBalanceQuery = "SELECT initial_balance FROM customers WHERE account_no=?";
-            stmt = connection.prepareStatement(retrieveBalanceQuery);
-            stmt.setString(1, username);
-            rs = stmt.executeQuery();
-
-            if (rs.next()) {
-                double currentBalance = rs.getDouble("initial_balance");
-
+            if (currentBalance >= 0) {
                 // Calculate new balance after deposit
                 double newBalance = currentBalance + amount;
 
                 // Update balance in the database
-                String updateBalanceQuery = "UPDATE customers SET initial_balance=? WHERE account_no=?";
-                stmt = connection.prepareStatement(updateBalanceQuery);
-                stmt.setDouble(1, newBalance);
-                stmt.setString(2, username);
-                int rowsUpdated = stmt.executeUpdate();
-
-                if (rowsUpdated > 0) {
-                	session.setAttribute("balance", newBalance);
+                if (customerDAO.updateBalance(username, newBalance)) {
+                    session.setAttribute("balance", newBalance);
                     // Insert transaction record into transactions table
-                    String insertTransactionQuery = "INSERT INTO banking_apps.transactions (account_no, transaction_date, transaction_type, amount, balance) VALUES (?, NOW(), ?, ?, ?)";
-                    stmt = connection.prepareStatement(insertTransactionQuery);
-                    stmt.setString(1, username); 
-                    stmt.setString(2, "Deposit");
-                    stmt.setDouble(3, amount);
-                    stmt.setDouble(4, newBalance);
-                    stmt.executeUpdate();
+                    customerDAO.insertTransaction(username, "Deposit", amount, newBalance);
                     out.println("<html><body><script>");
-                    out.println("alert('successfully deposit amount');");
-                    out.println("window.location.href = 'deposit.jsp ';");
+                    out.println("alert('Successfully deposited amount');");
+                    out.println("window.location.href = 'deposit.jsp';");
                     out.println("</script></body></html>");
-             
-                    	
                 } else {
                     out.println("<html><body><script>");
                     out.println("alert('Failed to update balance. Please try again.');");
-                    
+                    out.println("window.location.href = 'deposit.jsp';");
                     out.println("</script></body></html>");
                 }
             } else {
                 out.println("<html><body><script>");
                 out.println("alert('Failed to retrieve current balance. Please try again.');");
-                
+                out.println("window.location.href = 'deposit.jsp';");
                 out.println("</script></body></html>");
             }
-        } catch (ClassNotFoundException | SQLException e) {
+        } catch (SQLException e) {
             e.printStackTrace();
             out.println("<html><body><script>");
             out.println("alert('An unexpected error occurred. Please try again later.');");
-           
+            out.println("window.location.href = 'deposit.jsp';");
             out.println("</script></body></html>");
         } finally {
-            // Close connections and resources
-            try {
-                if (rs != null) {
-                    rs.close();
-                }
-                if (stmt != null) {
-                    stmt.close();
-                }
-                if (connection != null) {
-                    connection.close();
-                }
-                out.close();
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
+            out.close();
         }
     }
 }

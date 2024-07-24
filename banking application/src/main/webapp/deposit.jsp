@@ -10,9 +10,13 @@
     <style>
         body {
             font-family: Arial, sans-serif;
-            background-color: #f0f0f0;
             margin: 0;
-            padding: 20px;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+       
         }
         .container {
             background-color: #fff;
@@ -21,7 +25,8 @@
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
             text-align: center;
             max-width: 400px;
-            margin: auto;
+            width: 100%;
+            box-sizing: border-box;
         }
         h1 {
             margin-bottom: 20px;
@@ -57,6 +62,8 @@
     </style>
 </head>
 <body>
+<% response.setHeader("Cache-Control", "no-cache , no-store, must-revalidate"); 
+    response.setHeader("Expires","0"); %>
     <div class="container">
         <h1><i class="fas fa-money-check-alt"></i> Deposit</h1>
         <form action="DepositServlet" method="post">
@@ -72,5 +79,11 @@
                <div class="error-message"><%= errorMessage %></div>
         <% } %>
     </div>
+    <script>
+        history.pushState(null, null, document.URL);
+        window.addEventListener('popstate', function () {
+            history.pushState(null, null, document.URL);
+        });
+    </script>
 </body>
 </html>

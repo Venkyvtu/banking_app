@@ -38,13 +38,13 @@ public class LoginDAO {
                 if (isAdmin(role)) {
                     // Admin password is not hashed, compare directly
                     if (password.equals(hashedPasswordFromDB)) {
-                        result = new UserLoginResult(role, firstLogin, null, null, null);
+                        result = new UserLoginResult(role, firstLogin, null, null, null,null,null,null,null);
                     }
                 } else {
                     // User password needs to be hashed for comparison
                     if (verifyPassword(password, hashedPasswordFromDB)) {
                         // If password matches, fetch user details
-                        sql = "SELECT full_name, account_no, initial_balance FROM customer_details.customers WHERE account_no=?";
+                        sql = "SELECT full_name, account_no, initial_balance,address,mobile_no,email,dob FROM customer_details.customers WHERE account_no=?";
                         ps = connection.prepareStatement(sql);
                         ps.setString(1, username);
 
@@ -53,8 +53,15 @@ public class LoginDAO {
                             String fullName = rs.getString("full_name");
                             String accountNumber = rs.getString("account_no");
                             BigDecimal balance = rs.getBigDecimal("initial_balance");
+                            String address = rs.getString("address");
 
-                            result = new UserLoginResult(role, firstLogin, fullName, accountNumber, balance);
+                            String mobile_no = rs.getString("mobile_no");
+
+                            String email = rs.getString("email");
+                            Date dob = rs.getDate("dob");
+
+
+                            result = new UserLoginResult(role, firstLogin, fullName, accountNumber, balance,address,mobile_no,email,dob);
                         }
                     }
                 }

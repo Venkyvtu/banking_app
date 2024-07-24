@@ -8,6 +8,8 @@
     <title>Registration Successful</title>
 </head>
 <body>
+<% response.setHeader("Cache-Control", "no-cache , no-store, must-revalidate"); 
+	response.setHeader("Expires","0"); %>
     <h2>Registration Successful!</h2>
     <p>Your account has been successfully created.</p>
     <%

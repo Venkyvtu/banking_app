@@ -1,17 +1,16 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<%@ page import="java.sql.*" %>
-<%@ page import="java.nio.file.Paths" %>
+<%@ page import="model.UserLoginResult" %>
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard</title>
+    <title>User Profile</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/boxicons@2.1.0/css/boxicons.min.css" rel="stylesheet">
     <style>
         body {
             font-family: Arial, sans-serif;
-            background-color: #f0f0f0;
             margin: 0;
             padding: 0;
             display: flex;
@@ -44,18 +43,13 @@
             text-align: center;
         }
         .info p {
-            margin: 10px 0;
+            margin: 15px 0;
+            display: flex;
+            align-items: center;
         }
-        .profile-image {
-            width: 150px;
-            height: 150px;
-            object-fit: cover;
-            border-radius: 50%;
-            border: 4px solid #ddd;
-        }
-        .icon {
+        .info p .icon {
+            margin-right: 15px;
             color: #555;
-            margin-right: 10px;
         }
         @media (max-width: 500px) {
             .container {
@@ -71,13 +65,19 @@
     </style>
 </head>
 <body>
-    <div class="container">
-        <h1><i class="fas fa-chart-line icon"></i> Dashboard</h1>
-        <div class="info">
-			<p><i class="fas fa-user icon"></i> <strong>Full Name:</strong> ${sessionScope.fullName}</p>
-            <p><i class="fas fa-id-card icon"></i> <strong>Account Number:</strong> ${sessionScope.accountNumber}</p>
-            <p><i class="fas fa-coins icon"></i> <strong>Balance:</strong> ${sessionScope.balance}</p>
-        </div>
+<% response.setHeader("Cache-Control", "no-cache, no-store, must-revalidate");
+   response.setHeader("Expires", "0"); %>
+<div class="container">
+    <h1><i class="fas fa-chart-line icon"></i> User Profile</h1>
+    <div class="info">
+        <p><i class='bx bxs-user icon'></i> <strong>Full Name:</strong> ${sessionScope.fullName}</p>
+        <p><i class='bx bxs-phone icon'></i> <strong>Mobile Number:</strong> ${sessionScope.mobile_no}</p>
+        <p><i class='bx bxs-calendar icon'></i> <strong>DOB:</strong> ${sessionScope.dob}</p>
+        <p><i class='bx bxs-envelope icon'></i> <strong>Email:</strong> ${sessionScope.email}</p>
+        <p><i class='bx bxs-dollar-circle icon'></i> <strong>Balance:</strong> ${sessionScope.balance}</p>
+        <p><i class='bx bxs-id-card icon'></i> <strong>Account Number:</strong> ${sessionScope.accountNumber}</p>
+        <p><i class='bx bxs-map icon'></i> <strong>Address:</strong> ${sessionScope.address}</p>
     </div>
+</div>
 </body>
 </html>

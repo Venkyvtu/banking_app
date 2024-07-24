@@ -1,6 +1,8 @@
 <%@ page language="java" contentType="text/plain; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ page import="java.sql.*" %>
 <%
+ response.setHeader("Cache-Control", "no-cache , no-store, must-revalidate"); 
+response.setHeader("Expires","0");
     String destinationAccount = request.getParameter("destinationAccount");
 
     // Database connection parameters

@@ -1,18 +1,12 @@
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
+import java.sql.SQLException;
 
 @WebServlet("/UpdateCustomerServlet")
 public class UpdateCustomerServlet extends HttpServlet {
@@ -29,53 +23,33 @@ public class UpdateCustomerServlet extends HttpServlet {
         String dob = request.getParameter("dob");
         String accountStatus = request.getParameter("accountStatus");
 
+        Customer customer = new Customer();
+        customer.setId(Integer.parseInt(id));
+        customer.setFullName(fullName);
+        customer.setAddress(address);
+        customer.setMobileNo(mobile);
+        customer.setEmail(email);
+        customer.setAccountNo(username);
+        customer.setAccountType(accountType);
+        customer.setDob(dob);
+        customer.setAccountStatus(accountStatus);
+
         // Hash the password (DOB in this case)
         String hashedPassword = hashPassword(dob);
 
-        try (Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/customer_details", "root", "root")) {
-            // Load the JDBC driver
-            Class.forName("com.mysql.cj.jdbc.Driver");
+        CustomerDAO customerDAO = new CustomerDAO();
+        
 
-            // Update customers table
-            String updateCustomerSQL = "UPDATE customers SET full_name = ?, address = ?, mobile_no = ?, email = ?, account_type = ?, dob = ?, account_status = ? WHERE id = ?";
-            try (PreparedStatement updateCustomerStmt = con.prepareStatement(updateCustomerSQL)) {
-                updateCustomerStmt.setString(1, fullName);
-                updateCustomerStmt.setString(2, address);
-                updateCustomerStmt.setString(3, mobile);
-                updateCustomerStmt.setString(4, email);
-                updateCustomerStmt.setString(5, accountType);
-                updateCustomerStmt.setString(6, dob);
-                updateCustomerStmt.setString(7, accountStatus);
-                updateCustomerStmt.setInt(8, Integer.parseInt(id));
-                updateCustomerStmt.executeUpdate();
+        try {
+            customerDAO.updateCustomer(customer);
+
+            if (!customerDAO.userExists(username)) {
+                customerDAO.insertUser(username, hashedPassword);
             }
 
-            // Check if user exists in users table
-            String checkUserSQL = "SELECT * FROM banking_apps.users WHERE username = ?";
-            boolean userExists = false;
-            try (PreparedStatement checkUserStmt = con.prepareStatement(checkUserSQL)) {
-                checkUserStmt.setString(1, username);
-                try (ResultSet rs = checkUserStmt.executeQuery()) {
-                    if (rs.next()) {
-                        userExists = true;
-                    }
-                }
-            }
+           response.sendRedirect("customer_details.jsp?success=true");
 
-            if (!userExists) {
-                // Insert new user
-                String insertUserSQL = "INSERT INTO banking_apps.users (username, password, role) VALUES (?, ?, ?)";
-                try (PreparedStatement insertUserStmt = con.prepareStatement(insertUserSQL)) {
-                    insertUserStmt.setString(1, username);
-                    insertUserStmt.setString(2, hashedPassword);
-                    insertUserStmt.setString(3, "user");
-                    insertUserStmt.executeUpdate();
-                }
-            }
-
-            response.sendRedirect("customer_details.jsp?success=true");
-
-        } catch (ClassNotFoundException | SQLException e) {
+        } catch (SQLException e) {
             e.printStackTrace();
             response.sendRedirect("customer_details.jsp?success=false");
         }
